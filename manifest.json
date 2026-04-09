@@ -1,0 +1,16 @@
+{
+  "name": "BKBC Team Executor",
+  "short_name": "BKBC_TB",
+  "description": "Powerful Mobile Executor by BKBC",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#ff0000",
+  "icons": [
+    {
+      "src": "https://ibb.co/gZrV71hc",
+      "sizes": "512x512",
+      "type": "image/jpg"
+    }
+  ]
+}
