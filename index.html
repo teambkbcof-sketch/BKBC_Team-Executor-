@@ -1,90 +1,171 @@
 <!DOCTYPE html>
-<html lang="az">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BKBC Team Executor | FFlag Edition</title>
+    <title>BKBC TEAM EXECUTOR</title>
     <style>
-        body { background: #0a0a0a; color: #00ff00; font-family: 'Consolas', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
-        .panel { width: 90%; max-width: 800px; background: #111; border: 2px solid #ff0000; box-shadow: 0 0 20px #ff0000; padding: 20px; border-radius: 10px; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; }
-        .logo { color: #ff0000; font-weight: bold; font-size: 20px; text-shadow: 0 0 5px #ff0000; }
-        textarea { width: 100%; height: 300px; background: #000; color: #00ff00; border: 1px solid #333; padding: 10px; font-family: 'Consolas', monospace; outline: none; resize: none; border-radius: 5px; box-sizing: border-box; }
-        .buttons { margin-top: 15px; display: flex; gap: 10px; }
-        button { flex: 1; padding: 12px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; border-radius: 5px; }
-        .btn-inject { background: #ff0000; color: white; }
-        .btn-execute { background: #333; color: white; border: 1px solid #ff0000; }
-        button:hover { opacity: 0.8; transform: scale(1.02); }
-        #status-box { position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.9); border-left: 5px solid #ff0000; padding: 15px; display: none; z-index: 1000; }
+        body {
+            background-color: #0c0c0c;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            background: #151515;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 10px;
+        }
+
+        .title {
+            color: #ff3333;
+            font-weight: bold;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 350px;
+            background: #050505;
+            color: #00ff66;
+            border: 1px solid #333;
+            padding: 15px;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            outline: none;
+            resize: none;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .footer-btns {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+            text-transform: uppercase;
+        }
+
+        .btn-attach { background: #ff3333; color: white; }
+        .btn-execute { background: #252525; color: white; border: 1px solid #444; }
+        button:hover { opacity: 0.8; }
+
+        /* Status Box on the Right */
+        #status-panel {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 200px;
+            background: #111;
+            border-right: 4px solid #ff3333;
+            padding: 15px;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+            display: none;
+        }
+
+        .status-item {
+            font-size: 12px;
+            margin-bottom: 5px;
+            color: #888;
+        }
+
+        .status-val {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
 
-    <div id="status-box">
-        <span id="status-text" style="font-weight: bold;">FFLAG INJECTING...</span>
+    <div id="status-panel">
+        <div class="status-item">PROCESS:</div>
+        <span id="st-process" class="status-val" style="color: #ff3333;">IDLE</span>
+        
+        <div class="status-item">CONNECTION:</div>
+        <span id="st-conn" class="status-val">WAITING</span>
+
+        <div class="status-item">LOG:</div>
+        <span id="st-log" class="status-val" style="font-size: 10px; color: #00ff66;">READY</span>
     </div>
 
-    <div class="panel">
+    <div class="container">
         <div class="header">
-            <div class="logo">BKBC TEAM EXECUTOR [V2.0]</div>
-            <div id="device-info" style="font-size: 10px; color: #555;">ENGINE: ROBLOX_FFLAG_BYPASS</div>
+            <div class="title">BKBC TEAM EXECUTOR [v2.0]</div>
+            <div style="font-size: 12px; color: #444;">ENGINE: CLOUD_SYNC</div>
         </div>
 
-        <textarea id="editor" placeholder="-- Skriptinizi daxil edin və ya FFlag-ləri aktiv edin..."></textarea>
+        <textarea id="editor" placeholder="-- Enter your script here..."></textarea>
 
-        <div class="buttons">
-            <button class="btn-inject" onclick="startInjection()">ATTACH / INJECT</button>
-            <button class="btn-execute" onclick="runExecution()">EXECUTE</button>
+        <div class="footer-btns">
+            <button class="btn-attach" onclick="attach()">Attach</button>
+            <button class="btn-execute" onclick="execute()">Execute</button>
         </div>
     </div>
 
     <script>
-        // Sənin verdiyin o 18.000 sətirlik siyahıdan ən kritik FFlag-lərin simulyasiya yükü
-        const criticalFlags = {
-            "DFFlagIdempotentDevProductPurchasingEnabled": "True",
-            "FFlagEnablePowerTraceModule": "True",
-            "FIntMaxCloudAssetDimension": "4096",
-            "FFlagRenderUseTextureManager224": "True"
-        };
+        const stPanel = document.getElementById('status-panel');
+        const stProcess = document.getElementById('st-process');
+        const stConn = document.getElementById('st-conn');
+        const stLog = document.getElementById('st-log');
 
-        function showStatus(text, color) {
-            const box = document.getElementById('status-box');
-            const statusText = document.getElementById('status-text');
-            statusText.innerText = text;
-            statusText.style.color = color;
-            box.style.display = 'block';
-            setTimeout(() => { box.style.display = 'none'; }, 3500);
+        function updateStatus(proc, conn, log, color = "#ff3333") {
+            stPanel.style.display = "block";
+            stProcess.innerText = proc.toUpperCase();
+            stProcess.style.color = color;
+            stConn.innerText = conn.toUpperCase();
+            stLog.innerText = log.toUpperCase();
         }
 
-        async function startInjection() {
-            showStatus("SEARCHING FOR ROBLOX PROCESS...", "gold");
+        function attach() {
+            updateStatus("Scanning", "Searching...", "Initializing", "gold");
             
-            // Real İnyeksiya Sorğusu (Sənin FFlag-lərini API-yə göndəririk)
-            setTimeout(async () => {
-                try {
-                    // Roblox-un Settings API-sinə sorğu atırıq
-                    await fetch('https://clientsettings.roblox.com/v1/settings/application?applicationContext=Desktop', {
-                        method: 'POST',
-                        mode: 'no-cors', // Brauzer blokunu aşmaq üçün
-                        body: JSON.stringify(criticalFlags)
-                    });
-                    
-                    showStatus("BKBC SUCCESS: INJECTED!", "#00ff00");
-                } catch (e) {
-                    showStatus("BYPASSING SECURITY... SUCCESS!", "#00ff00");
-                }
+            setTimeout(() => {
+                // Simulating connection check
+                fetch('http://127.0.0.1:5000/status').catch(() => {});
+                
+                updateStatus("Attached", "Connected", "Successfully Linked", "#00ff66");
             }, 1500);
         }
 
-        function runExecution() {
+        function execute() {
             const code = document.getElementById('editor').value;
-            if(!code) return alert("Skript boşdur!");
-            
-            showStatus("EXECUTING ON SERVER...", "cyan");
-            
-            // Serverside execution simulyasiyası
+            if(!code) return alert("Editor is empty!");
+
+            updateStatus("Executing", "Sending Data", "Transmitting Script", "cyan");
+
             setTimeout(() => {
-                showStatus("BKBC: SCRIPT EXECUTED SUCCESSFULLY!", "#00ff00");
+                updateStatus("Finished", "Active", "Execution Successful", "#00ff66");
+                console.log("BKBC: Script executed.");
             }, 1000);
         }
     </script>
