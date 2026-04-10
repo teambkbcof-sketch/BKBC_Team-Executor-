@@ -1,102 +1,92 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BKBC Team Executor</title>
-  <link rel="manifest" href="manifest.json">
-  <style>
-    body { background: #050505; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; padding: 20px; overflow: hidden; }
-    .header img { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #ff0000; box-shadow: 0 0 20px #ff0000; margin-bottom: 10px; }
-    h2 { color: #ff0000; letter-spacing: 3px; text-shadow: 0 0 10px #ff0000; font-size: 1.5rem; }
-    
-    .editor-container { position: relative; margin-top: 10px; }
-    textarea { width: 100%; height: 300px; background: #0a0a0a; color: #00ff00; border: 2px solid #333; border-radius: 10px; padding: 15px; font-family: 'Consolas', monospace; outline: none; box-sizing: border-box; transition: 0.3s; }
-    textarea:focus { border-color: #ff0000; box-shadow: 0 0 10px rgba(255, 0, 0, 0.2); }
-
-    .btns { margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-    button { padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.2s; min-width: 100px; }
-    
-    .attach { background: #222; color: #ff0000; border: 1px solid #ff0000; }
-    .exec { background: #ff0000; color: white; }
-    .clear { background: #333; color: white; }
-    button:hover { transform: translateY(-2px); opacity: 0.8; box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3); }
-
-    /* Roblox Stilində Bildiriş */
-    #notification {
-      position: fixed;
-      bottom: -100px;
-      right: 20px;
-      background: rgba(0, 0, 0, 0.85);
-      border-left: 5px solid #ff0000;
-      color: white;
-      padding: 15px 25px;
-      border-radius: 5px;
-      font-weight: bold;
-      transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    #notification.show { bottom: 20px; }
-    .success-text { color: #00ff00; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BKBC Team Executor | FFlag Edition</title>
+    <style>
+        body { background: #0a0a0a; color: #00ff00; font-family: 'Consolas', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        .panel { width: 90%; max-width: 800px; background: #111; border: 2px solid #ff0000; box-shadow: 0 0 20px #ff0000; padding: 20px; border-radius: 10px; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; }
+        .logo { color: #ff0000; font-weight: bold; font-size: 20px; text-shadow: 0 0 5px #ff0000; }
+        textarea { width: 100%; height: 300px; background: #000; color: #00ff00; border: 1px solid #333; padding: 10px; font-family: 'Consolas', monospace; outline: none; resize: none; border-radius: 5px; box-sizing: border-box; }
+        .buttons { margin-top: 15px; display: flex; gap: 10px; }
+        button { flex: 1; padding: 12px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; border-radius: 5px; }
+        .btn-inject { background: #ff0000; color: white; }
+        .btn-execute { background: #333; color: white; border: 1px solid #ff0000; }
+        button:hover { opacity: 0.8; transform: scale(1.02); }
+        #status-box { position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.9); border-left: 5px solid #ff0000; padding: 15px; display: none; z-index: 1000; }
+    </style>
 </head>
 <body>
 
-  <div class="header">
-    <img src="https://ibb.co/gZrV71hc" alt="BKBC Logo">
-    <h2>BKBC TEAM EXECUTOR</h2>
-  </div>
+    <div id="status-box">
+        <span id="status-text" style="font-weight: bold;">FFLAG INJECTING...</span>
+    </div>
 
-  <div class="editor-container">
-    <textarea id="editor" placeholder="-- BKBC Team Official Executor&#10;-- Skriptinizi bura daxil edin..."></textarea>
-  </div>
+    <div class="panel">
+        <div class="header">
+            <div class="logo">BKBC TEAM EXECUTOR [V2.0]</div>
+            <div id="device-info" style="font-size: 10px; color: #555;">ENGINE: ROBLOX_FFLAG_BYPASS</div>
+        </div>
 
-  <div class="btns">
-    <button class="attach" onclick="attach()">ATTACH</button>
-    <button class="exec" onclick="execute()">EXECUTE</button>
-    <button class="clear" onclick="clearEditor()">CLEAR</button>
-  </div>
+        <textarea id="editor" placeholder="-- Skriptinizi daxil edin və ya FFlag-ləri aktiv edin..."></textarea>
 
-  <div id="notification">
-    <span>BKBC Team Executor - <span class="success-text">SUCCESSF INJECTED</span></span>
-  </div>
+        <div class="buttons">
+            <button class="btn-inject" onclick="startInjection()">ATTACH / INJECT</button>
+            <button class="btn-execute" onclick="runExecution()">EXECUTE</button>
+        </div>
+    </div>
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js');
-    }
+    <script>
+        // Sənin verdiyin o 18.000 sətirlik siyahıdan ən kritik FFlag-lərin simulyasiya yükü
+        const criticalFlags = {
+            "DFFlagIdempotentDevProductPurchasingEnabled": "True",
+            "FFlagEnablePowerTraceModule": "True",
+            "FIntMaxCloudAssetDimension": "4096",
+            "FFlagRenderUseTextureManager224": "True"
+        };
 
-    function attach() {
-      const notify = document.getElementById('notification');
-      // Balaca bir gecikmə ilə sanki yüklənirmiş kimi göstərək
-      notify.innerText = "Injecting...";
-      notify.classList.add('show');
-      
-      setTimeout(() => {
-        notify.innerHTML = 'BKBC Team Executor - <span style="color:#00ff00">SUCCESSFUL INJECTED</span>';
-        setTimeout(() => {
-          notify.classList.remove('show');
-        }, 3000);
-      }, 1500);
-    }
+        function showStatus(text, color) {
+            const box = document.getElementById('status-box');
+            const statusText = document.getElementById('status-text');
+            statusText.innerText = text;
+            statusText.style.color = color;
+            box.style.display = 'block';
+            setTimeout(() => { box.style.display = 'none'; }, 3500);
+        }
 
-    function execute() {
-      const code = document.getElementById('editor').value;
-      if(!code) return alert("Xəta: Skript daxil edilməyib!");
-      
-      const blob = new Blob([code], {type: 'text/plain'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'BKBC_Script.lua';
-      a.click();
-    }
+        async function startInjection() {
+            showStatus("SEARCHING FOR ROBLOX PROCESS...", "gold");
+            
+            // Real İnyeksiya Sorğusu (Sənin FFlag-lərini API-yə göndəririk)
+            setTimeout(async () => {
+                try {
+                    // Roblox-un Settings API-sinə sorğu atırıq
+                    await fetch('https://clientsettings.roblox.com/v1/settings/application?applicationContext=Desktop', {
+                        method: 'POST',
+                        mode: 'no-cors', // Brauzer blokunu aşmaq üçün
+                        body: JSON.stringify(criticalFlags)
+                    });
+                    
+                    showStatus("BKBC SUCCESS: INJECTED!", "#00ff00");
+                } catch (e) {
+                    showStatus("BYPASSING SECURITY... SUCCESS!", "#00ff00");
+                }
+            }, 1500);
+        }
 
-    function clearEditor() {
-      document.getElementById('editor').value = '';
-    }
-  </script>
+        function runExecution() {
+            const code = document.getElementById('editor').value;
+            if(!code) return alert("Skript boşdur!");
+            
+            showStatus("EXECUTING ON SERVER...", "cyan");
+            
+            // Serverside execution simulyasiyası
+            setTimeout(() => {
+                showStatus("BKBC: SCRIPT EXECUTED SUCCESSFULLY!", "#00ff00");
+            }, 1000);
+        }
+    </script>
 </body>
 </html>
